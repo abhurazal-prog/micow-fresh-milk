@@ -1,0 +1,112 @@
+// Mi CoW Fresh Milk - script.js
+
+let cart = [];
+let total = 0;
+
+function addToCart(productName, price) {
+    // Add item to cart
+    cart.push({
+        name: productName,
+        price: price
+    });
+
+    // Update total
+    total += price;
+
+    // Refresh cart display
+    updateCart();
+
+    // Success message
+    alert(productName + " added to cart!");
+}
+
+function updateCart() {
+    const cartItems = document.getElementById("cart-items");
+    const cartTotal = document.getElementById("cart-total");
+
+    // Empty cart message
+    if (cart.length === 0) {
+        cartItems.innerHTML = "No items added yet.";
+        cartTotal.textContent = "0";
+        return;
+    }
+
+    // Build cart HTML
+    let html = "";
+
+    cart.forEach((item, index) => {
+        html += `
+            <div class="cart-item" style="
+                display:flex;
+                justify-content:space-between;
+                align-items:center;
+                margin:10px 0;
+                padding:10px;
+                border-bottom:1px solid #ddd;
+            ">
+                <span>${item.name}</span>
+
+                <span>
+                    ₹${item.price}
+
+                    <button
+                        onclick="removeFromCart(${index})"
+                        style="
+                            margin-left:10px;
+                            background:red;
+                            color:white;
+                            border:none;
+                            padding:5px 10px;
+                            border-radius:5px;
+                            cursor:pointer;
+                        "
+                    >
+                        Remove
+                    </button>
+                </span>
+            </div>
+        `;
+    });
+
+    cartItems.innerHTML = html;
+    cartTotal.textContent = total;
+}
+
+function removeFromCart(index) {
+    total -= cart[index].price;
+
+    cart.splice(index, 1);
+
+    updateCart();
+}
+
+function clearCart() {
+    cart = [];
+    total = 0;
+
+    updateCart();
+}
+
+function checkoutWhatsApp() {
+
+    if (cart.length === 0) {
+        alert("Your cart is empty.");
+        return;
+    }
+
+    let message = "Hello Mi CoW Fresh Milk,%0A%0AI would like to order:%0A";
+
+    cart.forEach((item) => {
+        message += `• ${item.name} - ₹${item.price}%0A`;
+    });
+
+    message += `%0A*Total:* ₹${total}`;
+
+    window.open(
+        `https://wa.me/917994331135?text=${message}`,
+        "_blank"
+    );
+}
+
+// Load empty cart on startup
+updateCart();
